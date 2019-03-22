@@ -2,20 +2,24 @@
 import threading
 import paho.mqtt.client as paho
 import json
+from pprint import pprint
 
+global _multiDetectionsHolder
 _multiDetectionsHolder = []
 _sessions = {}
 
 MQTT_IP_ADDR = "localhost"
 MQTT_PORT = 1883
 
-def handleMultiDetection(self):
+def handleMultiDetection():
    print('handleMultiDetection')
+#   pprint(_multiDetectionsHolder)
+   global _multiDetectionsHolder
    if len(_multiDetectionsHolder) <= 1:
       _multiDetectionsHolder = []
       return
 
-   for sessionId in self._sessions.keys():
+   for sessionId in _sessions.keys():
       message = _sessions[sessionId]
       payload = json.loads(message.payload)
       if payload['siteId'] != _multiDetectionsHolder[0]:
@@ -25,15 +29,17 @@ def handleMultiDetection(self):
 
 def onHotwordDetected(self, data, msg):
    print('onHotwordDetected')
+   pprint(_multiDetectionsHolder)
    payload = json.loads(msg.payload)
 
    if len(_multiDetectionsHolder) == 0:
-      threading.Timer(interval=0.3, function=self.handleMultiDetection).start()
+      threading.Timer(interval=0.3, function=handleMultiDetection).start()
 
    _multiDetectionsHolder.append(payload['siteId'])
 
 def onSessionStarted(self, data, msg):
    print('onSessionStarted')
+   pprint(_multiDetectionsHolder)
    sessionId = json.loads(msg.payload)['sessionId']
    _sessions[sessionId] = msg
 
