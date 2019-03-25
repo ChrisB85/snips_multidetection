@@ -13,8 +13,8 @@ MQTT_PORT = 1883
 
 def handleMultiDetection():
    print('handleMultiDetection')
-#   pprint(_multiDetectionsHolder)
    global _multiDetectionsHolder
+   pprint(_multiDetectionsHolder)
    if len(_multiDetectionsHolder) <= 1:
       _multiDetectionsHolder = []
       return
@@ -45,7 +45,7 @@ def onSessionStarted(self, data, msg):
 
 client = paho.Client("multi")
 client.connect(MQTT_IP_ADDR, MQTT_PORT, 60)
-client.subscribe("hermes/#")
+client.subscribe([("hermes/hotword/default/detected", 0), ("hermes/dialogueManager/sessionStarted", 0)])
 client.message_callback_add('hermes/hotword/default/detected', onHotwordDetected)
 client.message_callback_add('hermes/dialogueManager/sessionStarted', onSessionStarted)
 client.loop_forever()
