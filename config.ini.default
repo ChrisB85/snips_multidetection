@@ -1,0 +1,7 @@
+[global]
+
+[secret]
+host = localhost
+port = 1883
+user = 
+pass = 

@@ -2,14 +2,12 @@
 import threading
 import paho.mqtt.client as paho
 import json
+import mqtt_client
 from pprint import pprint
 
 global _multiDetectionsHolder
 _multiDetectionsHolder = []
 _sessions = {}
-
-MQTT_IP_ADDR = "localhost"
-MQTT_PORT = 1883
 
 def handleMultiDetection():
    print('handleMultiDetection')
@@ -27,6 +25,7 @@ def handleMultiDetection():
 
    _multiDetectionsHolder = []
 
+
 def onHotwordDetected(self, data, msg):
    print('onHotwordDetected')
    global _multiDetectionsHolder
@@ -38,6 +37,7 @@ def onHotwordDetected(self, data, msg):
 
    _multiDetectionsHolder.append(payload['siteId'])
 
+
 def onSessionStarted(self, data, msg):
    print('onSessionStarted')
    global _multiDetectionsHolder
@@ -45,8 +45,10 @@ def onSessionStarted(self, data, msg):
    sessionId = json.loads(msg.payload)['sessionId']
    _sessions[sessionId] = msg
 
+
 client = paho.Client("multi")
-client.connect(MQTT_IP_ADDR, MQTT_PORT, 60)
+client.username_pw_set(mqtt_client.get_user(), mqtt_client.get_pass())
+client.connect(mqtt_client.get_addr(), mqtt_client.get_port(), 60)
 client.subscribe([("hermes/hotword/default/detected", 0), ("hermes/dialogueManager/sessionStarted", 0)])
 client.message_callback_add('hermes/hotword/default/detected', onHotwordDetected)
 client.message_callback_add('hermes/dialogueManager/sessionStarted', onSessionStarted)
