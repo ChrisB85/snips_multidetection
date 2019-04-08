@@ -10,9 +10,9 @@ _multiDetectionsHolder = []
 _sessions = {}
 
 def handleMultiDetection():
-   print('handleMultiDetection')
+   #print('handleMultiDetection')
    global _multiDetectionsHolder
-   pprint(_multiDetectionsHolder)
+   #pprint(_multiDetectionsHolder)
    if len(_multiDetectionsHolder) <= 1:
       _multiDetectionsHolder = []
       return
@@ -27,9 +27,9 @@ def handleMultiDetection():
 
 
 def onHotwordDetected(self, data, msg):
-   print('onHotwordDetected')
+   #print('onHotwordDetected')
    global _multiDetectionsHolder
-   pprint(_multiDetectionsHolder)
+   #pprint(_multiDetectionsHolder)
    payload = json.loads(msg.payload)
 
    if len(_multiDetectionsHolder) == 0:
@@ -39,9 +39,9 @@ def onHotwordDetected(self, data, msg):
 
 
 def onSessionStarted(self, data, msg):
-   print('onSessionStarted')
+   #print('onSessionStarted')
    global _multiDetectionsHolder
-   pprint(_multiDetectionsHolder)
+   #pprint(_multiDetectionsHolder)
    sessionId = json.loads(msg.payload)['sessionId']
    _sessions[sessionId] = msg
 
